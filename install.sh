@@ -81,16 +81,24 @@ fi
 # ============================================
 echo ""
 echo "[3/4] 安装 Claude Code（使用国内镜像）..."
-echo "  设置 npm 镜像为 npmmirror.com..."
+
+# 配置国内加速：npm 镜像 + Git HTTPS + 超时
+echo "  配置国内加速..."
 npm config set registry https://registry.npmmirror.com
+npm config set disturl https://npmmirror.com/dist
+npm config set timeout 120000
+
+# 强制 Git 走 HTTPS（国内 git:// 协议被封）
+git config --global url."https://github.com/".insteadOf git@github.com: 2>/dev/null || true
+git config --global url."https://".insteadOf git:// 2>/dev/null || true
 
 if command -v claude &> /dev/null; then
     CC_VER=$(claude --version 2>/dev/null || echo "unknown")
     echo "  已有 Claude Code: $CC_VER，更新到最新版..."
-    npm install -g @anthropic-ai/claude-code@latest
+    npm install -g @anthropic-ai/claude-code@latest --registry=https://registry.npmmirror.com
 else
     echo "  正在安装（约 200MB，请耐心等待）..."
-    npm install -g @anthropic-ai/claude-code
+    npm install -g @anthropic-ai/claude-code --registry=https://registry.npmmirror.com
 fi
 
 # ============================================

@@ -129,9 +129,17 @@ if (-not $nodeOk) {
 Write-Host ""
 Write-Host "[4/5] 安装 Claude Code（使用国内镜像）..." -ForegroundColor Yellow
 
-# 换成淘宝镜像源，解决国内下载慢/失败的问题
-Write-Host "  设置 npm 镜像为 npmmirror.com..." -ForegroundColor Gray
+# 配置国内加速：npm 镜像 + Git HTTPS + 超时
+Write-Host "  配置国内加速..." -ForegroundColor Gray
 npm config set registry https://registry.npmmirror.com
+npm config set disturl https://npmmirror.com/dist
+npm config set sass_binary_site https://npmmirror.com/mirrors/node-sass
+npm config set electron_mirror https://npmmirror.com/mirrors/electron/
+npm config set timeout 120000
+
+# 强制 Git 走 HTTPS（国内 git:// 协议被封）
+git config --global url."https://github.com/".insteadOf git@github.com:
+git config --global url."https://".insteadOf git://
 
 # 检查是否已安装
 $alreadyInstalled = Get-Command claude -ErrorAction SilentlyContinue
@@ -139,10 +147,10 @@ $alreadyInstalled = Get-Command claude -ErrorAction SilentlyContinue
 if ($alreadyInstalled) {
     $ccVer = (claude --version) 2>$null
     Write-Host "  已有 Claude Code: $ccVer，更新到最新版..." -ForegroundColor White
-    npm install -g @anthropic-ai/claude-code@latest
+    npm install -g @anthropic-ai/claude-code@latest --registry=https://registry.npmmirror.com
 } else {
     Write-Host "  正在安装（约 200MB，请耐心等待）..." -ForegroundColor White
-    npm install -g @anthropic-ai/claude-code
+    npm install -g @anthropic-ai/claude-code --registry=https://registry.npmmirror.com
 }
 
 if ($LASTEXITCODE -ne 0) {

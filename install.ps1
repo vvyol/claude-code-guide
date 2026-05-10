@@ -162,13 +162,34 @@ if ($LASTEXITCODE -ne 0) {
     Write-Host "  3. 磁盘空间不足 → 至少需要 500MB 可用空间" -ForegroundColor Gray
     pause
     exit 1
+	}
+
+# ============================================
+# Step 5: 安装 cc-switch（国产模型切换工具）
+# ============================================
+Write-Host ""
+Write-Host "[5/6] 安装 cc-switch（国产模型支持）..." -ForegroundColor Yellow
+
+$ccSwitchDir = "$homePath\.local\bin"
+$ccSwitchExe = "$ccSwitchDir\cc-switch.exe"
+
+if (-not (Test-Path $ccSwitchDir)) {
+    New-Item -ItemType Directory -Path $ccSwitchDir -Force | Out-Null
+}
+
+Write-Host "  从 GitHub 镜像下载 cc-switch..." -ForegroundColor Gray
+try {
+    Invoke-WebRequest -Uri "https://ghproxy.com/https://github.com/farion1231/cc-switch/releases/latest/download/cc-switch-windows-amd64.exe" -OutFile $ccSwitchExe -TimeoutSec 60
+    Write-Host "  cc-switch 安装完成" -ForegroundColor Green
+} catch {
+    Write-Host "  下载失败，跳过(可手动下载: https://github.com/farion1231/cc-switch)" -ForegroundColor Yellow
 }
 
 # ============================================
-# Step 5: 验证
+# Step 6: 验证
 # ============================================
 Write-Host ""
-Write-Host "[5/5] 验证安装..." -ForegroundColor Yellow
+Write-Host "[6/6] 验证安装..." -ForegroundColor Yellow
 
 try {
     $ccVerFinal = (claude --version) 2>$null
@@ -181,11 +202,10 @@ try {
     Write-Host "  下一步：" -ForegroundColor Yellow
     Write-Host ""
     Write-Host "  1. 打开终端，输入 claude 回车" -ForegroundColor White
-    Write-Host "     首次运行会自动打开浏览器引导登录" -ForegroundColor Gray
+    Write-Host "    首次运行会自动打开浏览器引导登录" -ForegroundColor Gray
     Write-Host ""
-    Write-Host "  2. 如果想用国产模型（推荐）：" -ForegroundColor White
-    Write-Host "     下载 cc-switch: https://github.com/farion1231/cc-switch/releases" -ForegroundColor Gray
-    Write-Host "     支持 DeepSeek / Kimi / 智谱 GLM 等国内 API" -ForegroundColor Gray
+    Write-Host "  2. 已自动安装 cc-switch（国产模型切换）：" -ForegroundColor White
+    Write-Host "     终端输入 cc-switch 即可切换 DeepSeek / Kimi 等" -ForegroundColor Gray
     Write-Host ""
     Write-Host "  3. 如果运行时报错找不到命令：" -ForegroundColor White
     Write-Host "     关掉终端重新打开，或者把以下路径加到 PATH:" -ForegroundColor Gray

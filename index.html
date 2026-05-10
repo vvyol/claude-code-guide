@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code 一键安装 - Windows / Mac / Linux</title>
+    <meta name="description" content="Claude Code 一键安装教程，支持 Windows / Mac / Linux，一行命令自动装好。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #FAF9F6;
+            --text: #1a1a1a;
+            --text-light: #999;
+            --accent: #FF6B00;
+            --code-bg: #1e1e2e;
+            --code-text: #cdd6f4;
+            --border: #eee;
+            --card-bg: #fff;
+            --success: #2d9d4e;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: "Inter", -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 80px 24px 80px;
+        }
+
+        /* Header */
+        .header {
+            margin-bottom: 48px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-family: "Noto Serif SC", serif;
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        /* Hero download area */
+        .hero-download {
+            text-align: center;
+            margin-bottom: 56px;
+            padding: 40px 24px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .hero-download .big-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+
+        .hero-download .hero-title {
+            font-family: "Noto Serif SC", serif;
+            font-size: 1.4rem;
+            font-weight: 400;
+            margin-bottom: 8px;
+        }
+
+        .hero-download .hero-desc {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 28px;
+        }
+
+        .hero-download .checksum {
+            margin-top: 16px;
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        /* Steps */
+        .step {
+            margin-bottom: 56px;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .step-header h2 {
+            font-family: "Noto Serif SC", serif;
+            font-size: 1.3rem;
+            font-weight: 400;
+        }
+
+        .step p {
+            color: var(--text);
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+        }
+
+        .step .note {
+            color: var(--text-light);
+            font-size: 0.88rem;
+        }
+
+        /* Code block */
+        .code-block {
+            position: relative;
+            background: var(--code-bg);
+            color: var(--code-text);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+            font-size: 0.88rem;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        .hero-code {
+            font-size: 1.05rem;
+            padding: 20px 24px;
+            text-align: center;
+        }
+
+        .hero-code .copy-btn {
+            top: 50%;
+            transform: translateY(-50%);
+            right: 12px;
+        }
+
+        /* Download buttons */
+        .download-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .download-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .download-btn:hover {
+            border-color: var(--accent);
+            transform: translateX(4px);
+        }
+
+        .download-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .download-icon { font-size: 1.2rem; }
+
+        .download-label strong {
+            display: block;
+            font-weight: 500;
+        }
+
+        .download-label span {
+            font-size: 0.78rem;
+            color: var(--text-light);
+        }
+
+        .download-arrow {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .download-btn:hover .download-arrow { color: var(--accent); }
+
+        .download-sub {
+            font-size: 0.82rem;
+            color: var(--text-light);
+            display: block;
+            margin: 4px 0 12px;
+        }
+
+        .download-sub a {
+            color: var(--text-light);
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .download-sub a:hover { color: var(--accent); }
+
+        @media (max-width: 480px) {
+            .download-grid { grid-template-columns: 1fr; }
+        }
+
+        .code-block .lang {
+            position: absolute;
+            top: 8px;
+            right: 52px;
+            font-size: 0.7rem;
+            color: #585b70;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            background: none;
+            border: 1px solid #45475a;
+            color: #a6adc8;
+            font-size: 0.75rem;
+            padding: 2px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: "Inter", sans-serif;
+        }
+
+        .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .copy-btn.copied { border-color: var(--success); color: var(--success); }
+
+        code {
+            background: #f0efe9;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+            font-size: 0.88em;
+        }
+
+        .code-block code {
+            background: none;
+            padding: 0;
+            display: block;
+            white-space: pre;
+        }
+
+        /* Tip box */
+        .tip {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: 0.9rem;
+        }
+
+        .tip .tip-title {
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 48px 0;
+        }
+
+        /* QA */
+        .qa-item {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+
+        .qa-item:first-of-type { padding-top: 4px; }
+        .qa-item:last-of-type { border-bottom: none; padding-bottom: 0; }
+
+        .qa-q {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+        }
+
+        .qa-a {
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 24px;
+            color: var(--text-light);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+            margin-top: 48px;
+        }
+
+        .footer a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer a:hover { color: var(--accent); }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin: 24px 0 0;
+            border-bottom: 1px solid var(--border);
+            justify-content: center;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 8px 24px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            font-family: "Inter", sans-serif;
+        }
+
+        .tab-btn:hover { color: var(--text); }
+        .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        @media (max-width: 480px) {
+            .container { padding: 60px 20px 60px; }
+            .header h1 { font-size: 1.5rem; }
+            .code-block { font-size: 0.8rem; padding: 14px 16px; }
+        }
+
+        @media (min-width: 1100px) {
+            body { font-size: 18px; }
+            .container { max-width: 940px; padding: 96px 36px 104px; }
+            .header h1 { font-size: 2.7rem; margin-bottom: 16px; }
+            .header .subtitle { font-size: 1.05rem; }
+            .step-header h2 { font-size: 1.72rem; }
+            .step p, .qa-a, .qa-q { font-size: 1.06rem; }
+            .hero-download { padding: 56px 32px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>Claude Code 一键安装</h1>
+        <p class="subtitle">一行命令，自动装好。简单到只需要复制粘贴。</p>
+    </div>
+
+    <div class="hero-download">
+        <div class="big-icon">⚡</div>
+        <div class="hero-title">复制命令，粘贴到终端回车，全程自动</div>
+        <div class="hero-desc">自动检测系统、安装必要组件、装好 Claude Code</div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab(event, 'tab-win')">Windows</button>
+            <button class="tab-btn" onclick="switchTab(event, 'tab-mac')">Mac / Linux</button>
+        </div>
+
+        <div class="tab-content active" id="tab-win">
+            <div class="code-block hero-code">
+                <span class="lang">powershell</span>
+                <button class="copy-btn" onclick="copyCode(this)">复制命令</button>
+                <code>irm https://daheiai.com/cc.ps1 | iex</code>
+            </div>
+            <div class="checksum">Windows 10 / 11 · PowerShell</div>
+        </div>
+
+        <div class="tab-content" id="tab-mac">
+            <div class="code-block hero-code">
+                <span class="lang">bash</span>
+                <button class="copy-btn" onclick="copyCode(this)">复制命令</button>
+                <code>curl -fsSL https://daheiai.com/cc.sh | sh</code>
+            </div>
+            <div class="checksum">macOS / Linux · Terminal</div>
+        </div>
+    </div>
+
+    <!-- Windows Steps -->
+    <div class="tab-content active" id="tab-win-steps">
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <h2>安装 Git Bash</h2>
+            </div>
+            <p>Claude Code 原生为 Linux / macOS 设计，Windows 需要 Git Bash 提供运行环境。安装时狂点下一步即可。</p>
+
+            <div class="download-grid">
+                <a href="https://wwayc.lanzoub.com/iSdog3n29ung" class="download-btn" target="_blank" rel="noopener">
+                    <div class="download-left">
+                        <span class="download-icon">📥</span>
+                        <div class="download-label">
+                            <strong>Git for Windows（64-bit）</strong>
+                            <span>适用于绝大多数电脑 · 提取码 67no</span>
+                        </div>
+                    </div>
+                    <span class="download-arrow">→</span>
+                </a>
+                <a href="https://wwayc.lanzoub.com/ioqPy3n29vmb" class="download-btn" target="_blank" rel="noopener">
+                    <div class="download-left">
+                        <span class="download-icon">📥</span>
+                        <div class="download-label">
+                            <strong>Git for Windows（ARM64）</strong>
+                            <span>适用于 ARM 处理器 · 提取码 f3m1</span>
+                        </div>
+                    </div>
+                    <span class="download-arrow">→</span>
+                </a>
+            </div>
+            <span class="download-sub">备用：也可从 <a href="https://git-scm.com/download/win" target="_blank" rel="noopener">Git 官网</a> 下载</span>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <h2>打开 PowerShell</h2>
+            </div>
+            <p>按键盘 <code>Win + X</code>，选「终端」或「PowerShell」。开始菜单搜索 <code>powershell</code>，右键「以管理员身份运行」打开。</p>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <h2>粘贴命令运行</h2>
+            </div>
+            <p>复制上面的命令，在 PowerShell 右键粘贴，回车。等待自动完成。</p>
+
+            <div class="tip">
+                <div class="tip-title">如果提示"在此系统上禁止运行脚本"</div>
+                <p>先运行 <code>Set-ExecutionPolicy RemoteSigned -Scope CurrentUser</code>，输入 Y 确认，然后重新粘贴安装命令。</p>
+            </div>
+
+            <p class="note">脚本会自动下载安装 Claude Code 本体，下载量约 200MB+，时间取决于网络。</p>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">4</div>
+                <h2>安装 cc-switch，接入 AI 模型</h2>
+            </div>
+            <p>Claude Code 装好了，但还需要 AI 模型才能用。<strong>cc-switch</strong> 帮你切换不同的模型提供商。</p>
+
+            <div class="tip">
+                <div class="tip-title">cc-switch 支持的模型</div>
+                <p>智谱 GLM、MiniMax、Kimi、DeepSeek、Claude、GPT 等。注册对应平台获取 API Key 即可接入。</p>
+            </div>
+
+            <p>下载 cc-switch：</p>
+
+            <div class="download-grid">
+                <a href="https://wwayc.lanzoub.com/iiHKV3n29yhe" class="download-btn" target="_blank" rel="noopener">
+                    <div class="download-left">
+                        <span class="download-icon">📦</span>
+                        <div class="download-label">
+                            <strong>CC-Switch for Windows</strong>
+                            <span>提取码 cxjy</span>
+                        </div>
+                    </div>
+                    <span class="download-arrow">→</span>
+                </a>
+            </div>
+            <span class="download-sub">新版本可从 <a href="https://github.com/farion1231/cc-switch/releases" target="_blank" rel="noopener">GitHub Releases</a> 获取</span>
+
+            <p style="margin-top: 16px;">安装后，选择 Claude 图标，添加渠道，填入 API Key 和模型名称，启用。</p>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">5</div>
+                <h2>启动 Claude Code</h2>
+            </div>
+            <p>进入工作文件夹，在地址栏输入 <code>powershell</code> 回车，然后输入：</p>
+
+            <div class="code-block">
+                <span class="lang">powershell</span>
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <code>claude</code>
+            </div>
+
+            <p class="note">如提示找不到命令，把 <code>C:\Users\你的用户名\.local\bin\</code> 加到 PATH，参考下方 FAQ。</p>
+        </div>
+
+    </div>
+
+    <!-- Mac/Linux Steps -->
+    <div class="tab-content" id="tab-mac-steps">
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <h2>打开终端</h2>
+            </div>
+            <p>Mac：按 <code>Cmd + Space</code> 搜索「Terminal」。Linux：用你习惯的终端即可。</p>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <h2>粘贴命令运行</h2>
+            </div>
+            <p>复制上面的命令，粘贴到终端，回车。等待自动完成。</p>
+
+            <p class="note">脚本会自动下载安装 Claude Code，下载量约 200MB+，时间取决于网络。</p>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <h2>安装 cc-switch，接入 AI 模型</h2>
+            </div>
+            <p>Claude Code 装好了，但还需要 AI 模型才能用。<strong>cc-switch</strong> 帮你切换不同的模型提供商。</p>
+
+            <div class="tip">
+                <div class="tip-title">cc-switch 支持的模型</div>
+                <p>智谱 GLM、MiniMax、Kimi、DeepSeek、Claude、GPT 等。注册对应平台获取 API Key 即可接入。</p>
+            </div>
+
+            <div class="download-grid">
+                <a href="https://wwayc.lanzoub.com/i9hKz3n29uxg" class="download-btn" target="_blank" rel="noopener">
+                    <div class="download-left">
+                        <span class="download-icon">📦</span>
+                        <div class="download-label">
+                            <strong>CC-Switch for macOS</strong>
+                            <span>提取码 cxjy</span>
+                        </div>
+                    </div>
+                    <span class="download-arrow">→</span>
+                </a>
+            </div>
+            <span class="download-sub">新版本可从 <a href="https://github.com/farion1231/cc-switch/releases" target="_blank" rel="noopener">GitHub Releases</a> 获取</span>
+
+            <p style="margin-top: 16px;">安装后，选择 Claude 图标，添加渠道，填入 API Key 和模型名称，启用后终端输入 <code>claude</code> 即可。</p>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">4</div>
+                <h2>启动 Claude Code</h2>
+            </div>
+            <p>终端输入：</p>
+
+            <div class="code-block">
+                <span class="lang">bash</span>
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <code>claude</code>
+            </div>
+
+            <p class="note">首次运行会在浏览器中引导登录 Anthropic 账号。Mac/Linux 一般不需要配置 PATH，如提示找不到命令，运行 <code>source ~/.zshrc</code> 或重开终端。</p>
+        </div>
+
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="step">
+        <div class="step-header">
+            <div class="step-number">?</div>
+            <h2>常见问题</h2>
+        </div>
+
+        <div class="tabs" style="justify-content: flex-start;">
+            <button class="tab-btn active" onclick="switchFaqTab(event, 'faq-win')">Windows</button>
+            <button class="tab-btn" onclick="switchFaqTab(event, 'faq-mac')">Mac / Linux</button>
+        </div>
+
+        <!-- Windows FAQ -->
+        <div class="tab-content active" id="faq-win">
+            <div class="qa-item">
+                <div class="qa-q">PowerShell 提示"无法识别"或"安全错误"？</div>
+                <div class="qa-a">先运行 <code>Set-ExecutionPolicy RemoteSigned -Scope CurrentUser</code>，输入 Y 确认，再重新粘贴安装命令。</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="qa-q">装完了但终端输入 claude 找不到？</div>
+                <div class="qa-a">把 <code>C:\Users\你的用户名\.local\bin\</code> 加到系统 PATH。具体：开始菜单搜「环境变量」→ 编辑系统环境变量 → 环境变量 → Path → 新建 → 粘贴路径 → 确定，重开终端。</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="qa-q">不装 Git Bash 可以吗？</div>
+                <div class="qa-a">不可以。Claude Code 在 Windows 上依赖 Git Bash 运行。按上面第 1 步下载安装，有 64-bit 和 ARM64 两个版本，选对应你电脑的即可。不确定就选 64-bit。</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="qa-q">下载特别慢或者卡住了？</div>
+                <div class="qa-a">下载约 200MB+，取决于网络。反复失败请检查能否访问 <code>storage.googleapis.com</code>。</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="qa-q">如何卸载？</div>
+                <div class="qa-a">
+                    <p>设置 → 应用 → 已安装的应用，搜索「Claude Code」卸载。</p>
+                    <p style="margin-top: 8px;">完全清除配置：</p>
+                    <div class="code-block">
+                        <span class="lang">powershell</span>
+                        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                        <code>Remove-Item -Path "$env:USERPROFILE\.local\bin\claude.exe" -Force
+Remove-Item -Path "$env:USERPROFILE\.local\share\claude" -Recurse -Force
+Remove-Item -Path "$env:USERPROFILE\.claude" -Recurse -Force
+Remove-Item -Path "$env:USERPROFILE\.claude.json" -Force</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mac/Linux FAQ -->
+        <div class="tab-content" id="faq-mac">
+            <div class="qa-item">
+                <div class="qa-q">提示 command not found？</div>
+                <div class="qa-a">运行 <code>source ~/.zshrc</code>（zsh）或 <code>source ~/.bashrc</code>（bash），或者关掉终端重新打开。Mac/Linux 安装脚本一般会自动配置 PATH。</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="qa-q">提示权限不足？</div>
+                <div class="qa-a">Mac/Linux 一般不需要 sudo。如果遇到权限问题，检查 <code>~/.local/bin/</code> 目录是否存在且可写。</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="qa-q">下载特别慢或者卡住了？</div>
+                <div class="qa-a">下载约 200MB+，取决于网络。反复失败请检查能否访问 <code>storage.googleapis.com</code>。</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="qa-q">如何卸载？</div>
+                <div class="qa-a">
+                    <p>终端运行：</p>
+                    <div class="code-block">
+                        <span class="lang">bash</span>
+                        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                        <code>rm -rf ~/.local/bin/claude
+rm -rf ~/.local/share/claude
+rm -rf ~/.claude
+rm -f ~/.claude.json</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="qa-item" style="border-bottom: none;">
+            <div class="qa-q">这脚本安全吗？</div>
+            <div class="qa-a">在浏览器打开 <code>https://daheiai.com/cc.ps1</code> 或 <code>https://daheiai.com/cc.sh</code> 直接查看源码。脚本仅从 Anthropic 官方 Google 存储桶下载，不经过第三方中转，不收集数据。</div>
+        </div>
+    </div>
+
+</div>
+
+<footer class="footer">
+    脚本开源 · 完全免费 · 不收集任何数据
+</footer>
+
+<script>
+function copyCode(btn) {
+    const block = btn.parentElement;
+    const code = block.querySelector('code');
+    const text = code.innerText;
+
+    navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = '已复制';
+        btn.classList.add('copied');
+        setTimeout(() => {
+            btn.textContent = '复制';
+            btn.classList.remove('copied');
+        }, 2000);
+    });
+}
+
+function switchTab(e, tabId) {
+    const section = e.target.closest('.hero-download');
+    const buttons = section.querySelectorAll('.tab-btn');
+    const contents = section.querySelectorAll(':scope > .tab-content');
+
+    buttons.forEach(b => b.classList.remove('active'));
+    contents.forEach(c => c.classList.remove('active'));
+
+    e.target.classList.add('active');
+    document.getElementById(tabId).classList.add('active');
+
+    // Also switch the steps
+    const stepsWin = document.getElementById('tab-win-steps');
+    const stepsMac = document.getElementById('tab-mac-steps');
+    if (stepsWin && stepsMac) {
+        if (tabId === 'tab-win') {
+            stepsWin.classList.add('active');
+            stepsMac.classList.remove('active');
+        } else {
+            stepsMac.classList.add('active');
+            stepsWin.classList.remove('active');
+        }
+    }
+
+    // Also switch FAQ
+    const faqWin = document.getElementById('faq-win');
+    const faqMac = document.getElementById('faq-mac');
+    if (faqWin && faqMac) {
+        if (tabId === 'tab-win') {
+            faqWin.classList.add('active');
+            faqMac.classList.remove('active');
+        } else {
+            faqMac.classList.add('active');
+            faqWin.classList.remove('active');
+            // Reset FAQ tab buttons
+            const faqSection = faqWin.closest('.step');
+            if (faqSection) {
+                const faqBtns = faqSection.querySelectorAll('.tab-btn');
+                faqBtns.forEach(b => b.classList.remove('active'));
+                faqBtns[1].classList.add('active');
+            }
+        }
+    }
+}
+
+function switchFaqTab(e, tabId) {
+    const section = e.target.closest('.step');
+    const buttons = section.querySelectorAll(':scope > .tabs > .tab-btn');
+    const contents = section.querySelectorAll(':scope > .tab-content');
+
+    buttons.forEach(b => b.classList.remove('active'));
+    contents.forEach(c => c.classList.remove('active'));
+
+    e.target.classList.add('active');
+    document.getElementById(tabId).classList.add('active');
+}
+</script>
+
+</body>
+</html>

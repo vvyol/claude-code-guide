@@ -94,10 +94,35 @@ else
 fi
 
 # ============================================
-# Step 4: 验证
+# Step 4: 配置 PATH（npm 全局包路径）
 # ============================================
 echo ""
-echo "[4/4] 验证安装..."
+echo "[4/5] 配置 PATH..."
+
+NPM_PREFIX=$(npm config get prefix 2>/dev/null || echo "")
+if [ -z "$NPM_PREFIX" ]; then
+    NPM_PREFIX="$HOME/.local"
+fi
+
+BIN_DIR="$NPM_PREFIX"
+if [ -d "$NPM_PREFIX/bin" ]; then
+    BIN_DIR="$NPM_PREFIX/bin"
+fi
+
+echo "  npm 全局命令路径: $BIN_DIR"
+
+if echo "$PATH" | grep -q "$BIN_DIR"; then
+    echo "  已在 PATH 中，跳过"
+else
+    export PATH="$PATH:$BIN_DIR"
+    echo "  已添加到当前会话 PATH"
+fi
+
+# ============================================
+# Step 5: 验证
+# ============================================
+echo ""
+echo "[5/5] 验证安装..."
 
 if command -v claude &> /dev/null; then
     CC_VER=$(claude --version 2>/dev/null)

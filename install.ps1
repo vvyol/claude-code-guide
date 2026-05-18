@@ -127,7 +127,7 @@ if (-not $nodeOk) {
 # Step 4: 配置 npm 镜像 + 安装 Claude Code
 # ============================================
 Write-Host ""
-Write-Host "[4/5] 安装 Claude Code（使用国内镜像）..." -ForegroundColor Yellow
+Write-Host "[4/6] 安装 Claude Code（使用国内镜像）..." -ForegroundColor Yellow
 
 # 换成淘宝镜像源，解决国内下载慢/失败的问题
 Write-Host "  设置 npm 镜像为 npmmirror.com..." -ForegroundColor Gray
@@ -157,10 +157,37 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 # ============================================
-# Step 5: 验证
+# Step 5: 配置 PATH（npm 全局包路径）
 # ============================================
 Write-Host ""
-Write-Host "[5/5] 验证安装..." -ForegroundColor Yellow
+Write-Host "[5/6] 配置 PATH..." -ForegroundColor Yellow
+
+$npmPrefix = (npm config get prefix) 2>$null
+if (-not $npmPrefix) { $npmPrefix = "$homePath\.local" }
+
+$binDir = $npmPrefix
+if (Test-Path "$npmPrefix\bin") { $binDir = "$npmPrefix\bin" }
+
+Write-Host "  npm 全局命令路径: $binDir" -ForegroundColor Gray
+
+# 获取当前用户 PATH（不依赖管理员权限）
+$userPath = [Environment]::GetEnvironmentVariable("Path", "User") ?? ""
+if ($userPath -notlike "*$binDir*") {
+    $newUserPath = if ($userPath) { "$userPath;$binDir" } else { $binDir }
+    [Environment]::SetEnvironmentVariable("Path", $newUserPath, "User")
+    Write-Host "  已添加到用户 PATH" -ForegroundColor Green
+} else {
+    Write-Host "  已在 PATH 中，跳过" -ForegroundColor Gray
+}
+
+# 刷新当前会话 PATH
+$env:Path = "$env:Path;$binDir"
+
+# ============================================
+# Step 6: 验证
+# ============================================
+Write-Host ""
+Write-Host "[6/6] 验证安装..." -ForegroundColor Yellow
 
 try {
     $ccVerFinal = (claude --version) 2>$null
@@ -171,23 +198,17 @@ try {
     Write-Host "============================================" -ForegroundColor Green
     Write-Host ""
     Write-Host "  下一步：" -ForegroundColor Yellow
-    Write-Host ""
-    Write-Host "  1. 打开终端，输入 claude 回车" -ForegroundColor White
+    Write-Host "  1. 关掉此窗口，新开一个终端，输入 claude 回车" -ForegroundColor White
     Write-Host "     首次运行会自动打开浏览器引导登录" -ForegroundColor Gray
     Write-Host ""
     Write-Host "  2. 如果想用国产模型（推荐）：" -ForegroundColor White
     Write-Host "     下载 cc-switch: https://github.com/farion1231/cc-switch/releases" -ForegroundColor Gray
     Write-Host "     支持 DeepSeek / Kimi / 智谱 GLM 等国内 API" -ForegroundColor Gray
     Write-Host ""
-    Write-Host "  3. 如果运行时报错找不到命令：" -ForegroundColor White
-    Write-Host "     关掉终端重新打开，或者把以下路径加到 PATH:" -ForegroundColor Gray
-    Write-Host "     $homePath\.local\bin\" -ForegroundColor Gray
-    Write-Host ""
 } catch {
     Write-Host ""
-    Write-Host "  安装似乎成功，但当前终端找不到 claude 命令。" -ForegroundColor Yellow
-    Write-Host "  关掉此窗口，重新打开一个新终端，输入 claude 即可。" -ForegroundColor White
-    Write-Host "  如果还不行，重启电脑让环境变量生效。" -ForegroundColor Gray
+    Write-Host "  安装成功，但当前窗口仍找不到 claude。" -ForegroundColor Yellow
+    Write-Host "  关掉此窗口，新开一个终端就正常了。" -ForegroundColor White
     Write-Host ""
 }
 

@@ -1,6 +1,6 @@
 # ============================================
 # Claude Code Windows 一键安装（国内优化版）
-# 用法: irm https://你的域名/install.ps1 | iex
+# 用法: irm https://vvyol.github.io/claude-code-guide/cc.ps1 | iex
 # ============================================
 
 $ErrorActionPreference = "Stop"

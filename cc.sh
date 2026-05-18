@@ -1,7 +1,7 @@
 #!/bin/bash
 # ============================================
 # Claude Code Mac / Linux 一键安装（国内优化版）
-# 用法: curl -fsSL https://vvyol.github.io/claude-code-guide/install.sh | sh
+# 用法: curl -fsSL https://vvyol.github.io/claude-code-guide/cc.sh | sh
 # ============================================
 
 set -e

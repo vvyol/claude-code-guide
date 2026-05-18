@@ -4,6 +4,7 @@
 # ============================================
 
 $ErrorActionPreference = "Stop"
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
 $host.ui.RawUI.WindowTitle = "Claude Code 安装"
 
 Write-Host ""

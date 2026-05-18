@@ -171,7 +171,8 @@ if (Test-Path "$npmPrefix\bin") { $binDir = "$npmPrefix\bin" }
 Write-Host "  npm 全局命令路径: $binDir" -ForegroundColor Gray
 
 # 获取当前用户 PATH（不依赖管理员权限）
-$userPath = [Environment]::GetEnvironmentVariable("Path", "User") ?? ""
+$userPath = [Environment]::GetEnvironmentVariable("Path", "User")
+if (-not $userPath) { $userPath = "" }
 if ($userPath -notlike "*$binDir*") {
     $newUserPath = if ($userPath) { "$userPath;$binDir" } else { $binDir }
     [Environment]::SetEnvironmentVariable("Path", $newUserPath, "User")
